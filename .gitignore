@@ -1,0 +1,38 @@
+# Arquivo de ambiente
+.env
+
+# Airflow
+airflow.cfg
+unittests.cfg
+logs/
+dags/__pycache__/
+plugins/__pycache__/
+airflow.db
+webserver_config.py
+*.pid
+*.lock
+
+# dbt
+dbt_packages/
+logs/
+target/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.sqlite3
+venv/
+env/
+*.egg-info/
+dist/
+build/
+
+# Arquivos de cache e temporários
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*.swn
+*.bak
