@@ -9,6 +9,7 @@ dags/__pycache__/
 plugins/__pycache__/
 airflow.db
 webserver_config.py
+standalone_admin_password.txt
 *.pid
 *.lock
 
