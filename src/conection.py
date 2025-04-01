@@ -5,7 +5,7 @@ from sqlalchemy import create_engine
 
 
 
-dotenv_path = Path(r"C:\Users\csouz\dataflow_airflow\.env")  # O 'r' antes da string trata como raw string
+dotenv_path = Path(r"/home/anselmo/etl_vendas/.env")  # O 'r' antes da string trata como raw string
 
 # Carregar variáveis do .env
 load_dotenv(dotenv_path=dotenv_path)
@@ -31,3 +31,4 @@ def conexao_postgresql():
         print(f"❌ Erro ao conectar ao PostgreSQL: {e}")
         return None
 
+conexao_postgresql()
