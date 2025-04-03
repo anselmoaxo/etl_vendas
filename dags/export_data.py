@@ -10,7 +10,8 @@ import os
 sys.path.append(os.path.join(os.path.dirname(__file__), "../src"))
 
 # Agora o import funcionará corretamente
-from extract import extract_data
+from extract import extract_data, path_file, fetch_and_save
+from load import inseri_data
 
 
 default_args = {
@@ -19,9 +20,19 @@ default_args = {
 }
 
 with DAG("export_postgres_to_csv", default_args=default_args, schedule_interval="@daily", catchup=False) as dag:
+    cria_diretorio = PythonOperator(
+        task_id="cria_diretorio",
+        python_callable=path_file
+    )
+
     export_task = PythonOperator(
         task_id="export_to_csv",
         python_callable=extract_data
     )
+    
+    inseri_bd = PythonOperator(
+        task_id="inseri_bd",
+        python_callable=inseri_data
+    )
 
-    export_task
+    cria_diretorio >> export_task >> inseri_bd

@@ -29,6 +29,7 @@ env/
 *.egg-info/
 dist/
 build/
+data/
 
 # Arquivos de cache e temporários
 .DS_Store

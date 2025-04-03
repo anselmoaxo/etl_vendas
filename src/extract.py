@@ -31,7 +31,8 @@ def extract_data():
     with conn.cursor() as cursor:
         for table_name in table_names:
             max_id = get_max(cursor, table_name)  # Pega o maior ID de cada tabela
-            query = f"SELECT * FROM {table_name} WHERE id_{table_name} = {max_id}"
+            #query = f"SELECT * FROM {table_name} WHERE id_{table_name} = {max_id}"
+            query = f"SELECT * FROM {table_name}"
             
             # Salva os dados em CSV
             save_data(query, conn, table_name)
