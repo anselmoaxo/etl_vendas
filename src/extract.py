@@ -1,7 +1,6 @@
-from conection import conexao_postgresql
-import pandas as pd
 import os
-
+import pandas as pd
+from airflow.providers.postgres.hooks.postgres import PostgresHook
 # Lista de tabelas no banco de dados
 table_names = ['veiculos', 'estados', 'cidades', 'concessionarias', 
                'vendedores', 'clientes', 'vendas']
@@ -12,11 +11,10 @@ def path_file():
     os.makedirs(output_dir, exist_ok=True)  # Criar diretório se não existir
     return output_dir
 
-def conectar():
-    """Cria a conexão com o banco de dados PostgreSQL."""
-    conn = conexao_postgresql()
-    if conn is None:
-        raise ValueError("Falha ao criar a conexão com o banco.")
+def fetch_and_save():
+    """Conecta ao PostgreSQL via Airflow, executa um SELECT e salva o resultado em CSV."""
+    postgres_hook = PostgresHook(postgres_conn_id="postgres_novadrive")  # Usa a conexão do Airflow
+    conn = postgres_hook.get_conn()
     return conn
 
 def get_max(cursor, table_name):
@@ -28,13 +26,12 @@ def get_max(cursor, table_name):
 
 def extract_data():
     """Extrai os dados mais recentes de cada tabela e salva em CSV."""
-    conn = conectar()
+    conn = fetch_and_save()
     
     with conn.cursor() as cursor:
         for table_name in table_names:
             max_id = get_max(cursor, table_name)  # Pega o maior ID de cada tabela
             query = f"SELECT * FROM {table_name} WHERE id_{table_name} = {max_id}"
-            cursor.execute(query)
             
             # Salva os dados em CSV
             save_data(query, conn, table_name)
@@ -55,5 +52,4 @@ def save_data(query, conn, tabela):
     else:
         print(f"Nenhum dado encontrado para {tabela}.")
 
-if __name__ == "__main__":
-    extract_data()
+
