@@ -1,15 +1,16 @@
-import sys
 import os
+import sys
 
+# Garante que o diretório 'src' seja incluído no path
 BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "../src"))
 sys.path.append(BASE_DIR)
-
 
 from airflow.decorators import dag, task
 from datetime import datetime, timedelta
 from extract.extract_ids_max import get_max_id_for_all_tables, get_dw_connection
 from load.load_incremental_data import transfer_data_incremental, get_origem_connection
 
+# Tabelas a serem processadas
 table_names = ['veiculos', 'estados', 'cidades', 'concessionarias', 
                'vendedores', 'clientes', 'vendas']
 
@@ -18,7 +19,7 @@ default_args = {
     'depends_on_past': False,
     'start_date': datetime(2024, 1, 1),
     'email_on_failure': False,
-    'retries': 0,
+    'retries': 1,
     'retry_delay': timedelta(minutes=5),
 }
 
@@ -39,7 +40,9 @@ def incremental_pipeline():
 
         for tabela in table_names:
             last_id = ids_max.get(tabela, 0)
+            print(f"🔄 Transferindo dados da tabela: {tabela} a partir do ID {last_id}")
             transfer_data_incremental(origem_conn, destino_conn, tabela, last_id)
+        print("✅ Todas as tabelas foram processadas.")
 
     run_incremental()
 
