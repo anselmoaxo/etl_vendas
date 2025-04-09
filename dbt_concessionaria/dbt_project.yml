@@ -1,0 +1,19 @@
+
+
+name: 'dbt_concessionaria'
+version: '1.0.0'
+
+profile: 'dbt_concessionaria'
+
+model-paths: ["models"]
+models:
+  dbt_concessionaria:
+    staging:
+      +schema: staging
+      +materialized: view
+    core:
+      +schema: core
+      +materialized: table
+    marts:
+      +schema: marts
+      +materialized: table
